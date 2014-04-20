@@ -3,8 +3,6 @@ function move = get_human_move()
 global BOARD;
 global TOPLAY;
 
-[X_MAX, Y_MAX] = size(BOARD);
-
 fprintf('Player %d to go.\n', TOPLAY);
 
 % Input validation: must place inside board, cannot place on occupied spot.
@@ -13,9 +11,9 @@ while ~ok
     x = input('x: ');
     y = input('y: ');
     
-    if x < 1 || x > X_MAX
+    if x < 1 || x > 8
         disp('X value out of bounds');
-    elseif y < 1 || y > Y_MAX
+    elseif y < 1 || y > 8
         disp('Y value out of bounds');
     elseif BOARD(x, y)
         disp('Cannot place on an already occupied spot')
@@ -24,4 +22,4 @@ while ~ok
     end
 end
 
-move = sub2ind(size(BOARD),x,y);
+move = sub2ind([8 8],x,y);

@@ -8,15 +8,15 @@ BOARD = zeros(8); % Board size is hardcoded. Neat, eh?
 SCORE = [0 0];
 TOPLAY = 1;
 
-while ~game_over()
-    move = get_human_move();
-    recalculate_score(move); % recalculate_score assumes move has not been played yet
+while ~game_over(SCORE)
+    move = get_ai_move(2);
+    SCORE = SCORE + move_score(move, TOPLAY); % recalculate_score assumes move has not been played yet
     play_move(move);
     disp_current_state();
     change_player();
 end
 
-winner = game_over();
+winner = game_over(SCORE);
 
 if winner == 1
     disp('First player wins!');
