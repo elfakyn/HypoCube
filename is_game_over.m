@@ -1,4 +1,4 @@
-function winner = game_over(score)
+function winner = is_game_over(score)
 
 % Game is over when the board is full or when one player has at least
 % WINNING_SCORE points with a lead of at least WIN_THRESHOLD

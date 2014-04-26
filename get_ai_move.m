@@ -23,14 +23,14 @@ global BOARD;
 
 max_value = -2;
 
-for move = 1:64 % try all moves
+for move = 1:numel(BOARD) % try all moves
     if ~BOARD(move)
         BOARD(move) = toplay; % do move
     else
         continue; % skip evaluation if spot is occupied
     end
     
-    winner = game_over(score);
+    winner = is_game_over(score);
     
     if winner == toplay
         value = 1;
@@ -64,7 +64,7 @@ end
 function value = value_asymmetrical(toplay, score)
 
 % Yes I know this is duplicate code.
-winner = game_over(score);
+winner = is_game_over(score);
 if winner == toplay
     value = 1;
     return;
