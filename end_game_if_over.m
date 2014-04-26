@@ -21,6 +21,6 @@ end
 
 for i = 1:gui.bsize(1)
     for j = 1:gui.bsize(2)
-        set(gui.board(i,j), 'Enable', 'off') % disable entire board
+        set(gui.board(i,j), 'Enable', 'inactive') % disable entire board
     end
 end

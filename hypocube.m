@@ -18,9 +18,12 @@ gui = struct;
 
 gui.bsize = size(BOARD);
 gui.boxdim = [40, 40];
-gui.boxgap = [1, 1];
+gui.boxgap = [0, 0];
 gui.topmargin = gui.boxdim(2);
 gui.margins = 0.5 * gui.boxdim;
+gui.ball{1} = imread('assets/blue_ball.png');
+gui.ball{2} = imread('assets/orange_ball.png');
+gui.background = imread('assets/board_slot.png');
 
 gui.width = gui.bsize(1)*gui.boxdim(1) + 2*gui.margins(1) - gui.boxgap(1);
 gui.height = gui.bsize(2)*gui.boxdim(2) + 2*gui.margins(2) + gui.topmargin;
@@ -59,6 +62,7 @@ for i = 1:gui.bsize(1)
         gui.board(i, j) = uicontrol(gui.main ...
             , 'Style', 'pushbutton' ...
             , 'Position', [gui.margins(1)+(i-1)*gui.boxdim(1), gui.margins(2)+(j-1)*gui.boxdim(2), gui.boxdim(1)-gui.boxgap(1), gui.boxdim(2)-gui.boxgap(2)] ...
+            , 'CData', gui.background ...
             );
     end
 end
