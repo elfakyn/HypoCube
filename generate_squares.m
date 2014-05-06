@@ -11,7 +11,7 @@ function generate_squares(X_MAX, Y_MAX)
 % .O... % O represents spot that has x0, y0.
 % Here, dx = 3, dy = 1
 %
-% Negatively angled (delta_x > 0, delta_y <= 0)
+% Negatively angled (dx > 0, dy <= 0)
 % .X...
 % ....X
 % .....
