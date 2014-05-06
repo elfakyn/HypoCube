@@ -1,83 +1,50 @@
-% AI player for the game. Horribly inefficient.
+% AI player for the game.
 
-function best_move = get_ai_move(depth)
-
-global SCORE;
-global TOPLAY;
-
-best_move = negamax(TOPLAY, SCORE, depth, []); % The existence of the fourth parameter says that it's the toplevel negamax call.
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Negamax algorithm used to determine best play;
-function value = negamax(toplay, score, depth, varargin)
-
-if depth == 0
-    value = value_asymmetrical(toplay, score); % In a true minimax algorithm the value should not be asymmetrical.
-                                               % This might have to be fixed.
-    return;
-end
+function best_move = get_ai_move(difficulty)
 
 global BOARD;
+global SCORE; % we'll use this some day
+global TOPLAY;
+global SQUARES;
 
-max_value = -2;
+value = [0.01, 0.15, 0.75, 1.5];
+offensive_bias = 1.01;
+defensive_bias = 1;
+selection_randomness = 0.0000001; % makes AI choose randomly between moves with equal value
+weighed_randomness = max(0, 0.08 - 0.01 * difficulty);
 
-for move = 1:numel(BOARD) % try all moves
-    if ~BOARD(move)
-        BOARD(move) = toplay; % do move
-    else
-        continue; % skip evaluation if spot is occupied
-    end
-    
-    winner = is_game_over(score);
-    
-    if winner == toplay
-        value = 1;
-    elseif winner == 3-toplay % opponent
-        value = -1;
-    elseif winner == -1 % board full, no winners
-        value = 0;
-    else
-        value = -negamax(3 - toplay, score + move_score(move,toplay), depth - 1);
-    end
-    BOARD(move) = 0; % undo move
-    
-    if value > max_value
-        max_value = value;
-        if (nargin == 4)
-            the_move = move;
+best_move_value = -Inf;
+best_move = 1; % This should always be overwritten the first chance
+for move = 1:numel(BOARD)
+    if ~BOARD(move) % spot not already occupied
+        move_value = 0;
+        for i = 1:size(SQUARES,1) % iterate through all squares
+            toplay_occupied = 0; % number of spots in current square already occupied by toplay, including move
+            opponent_occupied = 0;
+            for j = 1:4
+                if BOARD(SQUARES(i,j)) == TOPLAY || SQUARES(i,j) == move
+                    toplay_occupied = toplay_occupied + 1;
+                end
+                if BOARD(SQUARES(i,j)) == opponent(TOPLAY) || SQUARES(i,j) == move
+                    opponent_occupied = opponent_occupied + 1;
+                end
+            end
+            
+            if toplay_occupied && opponent_occupied <= 1 % opponent doesn't already block
+                move_value = move_value + SQUARES(i,5) * ( ... % value gained by directly building squares
+                    value(toplay_occupied) * offensive_bias ...
+                    + randn * weighed_randomness); 
+            end
+            if opponent_occupied && toplay_occupied <= 1 % we don't already block
+                move_value = move_value + SQUARES(i,5) * ( ... % value gained by blocking opponent from building squares
+                    value(opponent_occupied) * defensive_bias ...
+                    + randn * weighed_randomness); 
+            end
+        end
+        if move_value + randn * selection_randomness > best_move_value
+            best_move = move;
+            best_move_value = move_value + randn * selection_randomness;
         end
     end
 end
-
-if (nargin == 4)
-    value = the_move; % This is ugly and I deserve to be whipped once for every time this gets evaluated.
-                      % That would be once per AI call.
-end
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Evaluates the value of a board configuration to a player
-
-function value = value_asymmetrical(toplay, score)
-
-% Yes I know this is duplicate code.
-winner = is_game_over(score);
-if winner == toplay
-    value = 1;
-    return;
-elseif winner == 3-toplay % opponent
-    value = -1;
-    return;
-elseif winner == -1
-    value = 0;
-    return;
-end
-
-global WINNING_SCORE;
-
-value = (2*score(toplay) - score(3-toplay)) / (2*WINNING_SCORE); % TODO: optimize this
-
-end
+            

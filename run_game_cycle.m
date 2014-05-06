@@ -1,4 +1,4 @@
-function run_game_cycle(hObject,eventdata,gui)
+function run_game_cycle(hObject, ~, gui)
 
 global SCORE;
 
@@ -16,6 +16,6 @@ play_move(move, gui);
 
 if get(gui.against_ai, 'Value') && ~is_game_over(SCORE)
     pause(0.5) % make it seem that the AI is doing something
-    move = get_ai_move(1);
+    move = get_ai_move(gui.difficulty);
     play_move(move, gui);
 end

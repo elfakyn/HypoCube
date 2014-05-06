@@ -20,4 +20,5 @@ set(gui.scoreboard ...
     );
 
 end_game_if_over(gui);
-change_player();
+
+TOPLAY = opponent(TOPLAY); % change player
