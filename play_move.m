@@ -3,14 +3,22 @@ function play_move(move, gui)
 global BOARD;
 global TOPLAY;
 global SCORE;
+global LAST_MOVE;
 
+% Delete label on the last move.
+if ~isempty(LAST_MOVE)
+    set(gui.board(sub2ind(gui.bsize, LAST_MOVE)) ...
+        , 'String', '' ...
+        );
+end
 % Update button corresponding to move
 set(gui.board(sub2ind(gui.bsize, move)) ...
     , 'Enable', 'inactive' ...
-    ..., 'String', TOPLAY ...
+    , 'String', '#' ...
     , 'CData', gui.ball{TOPLAY} ...
     );
 
+LAST_MOVE = move;
 BOARD(move) = TOPLAY;
 
 SCORE = SCORE + move_score(move, TOPLAY);
