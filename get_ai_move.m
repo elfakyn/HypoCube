@@ -21,6 +21,7 @@ for move = 1:numel(BOARD)
         for i = 1:size(SQUARES,1) % iterate through all squares
             toplay_occupied = 0; % number of spots in current square already occupied by toplay, including move
             opponent_occupied = 0;
+            valid_contains_move = 0;
             for j = 1:4
                 if BOARD(SQUARES(i,j)) == TOPLAY || SQUARES(i,j) == move
                     toplay_occupied = toplay_occupied + 1;
@@ -28,6 +29,13 @@ for move = 1:numel(BOARD)
                 if BOARD(SQUARES(i,j)) == opponent(TOPLAY) || SQUARES(i,j) == move
                     opponent_occupied = opponent_occupied + 1;
                 end
+                if SQUARES(i,j) == move
+                    valid_contains_move = 1;
+                end
+            end
+            
+            if ~valid_contains_move
+                continue; % don't score squares that are unchanged by the move
             end
             
             if toplay_occupied && opponent_occupied <= 1 % opponent doesn't already block
