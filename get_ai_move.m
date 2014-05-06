@@ -11,7 +11,7 @@ value = [0.01, 0.15, 0.75, 1.5];
 offensive_bias = 1.01;
 defensive_bias = 1;
 selection_randomness = 0.0000001; % makes AI choose randomly between moves with equal value
-weighed_randomness = max(0, 0.16 - 0.02 * difficulty);
+weighted_randomness = max(0, 0.16 - 0.02 * difficulty);
 
 best_move_value = -Inf;
 best_move = 1; % This should always be overwritten the first chance
@@ -41,12 +41,12 @@ for move = 1:numel(BOARD)
             if toplay_occupied && opponent_occupied <= 1 % opponent doesn't already block
                 move_value = move_value + SQUARES(i,5) * ( ... % value gained by directly building squares
                     value(toplay_occupied) * offensive_bias ...
-                    + randn * weighed_randomness); 
+                    + randn * weighted_randomness); 
             end
             if opponent_occupied && toplay_occupied <= 1 % we don't already block
                 move_value = move_value + SQUARES(i,5) * ( ... % value gained by blocking opponent from building squares
                     value(opponent_occupied) * defensive_bias ...
-                    + randn * weighed_randomness); 
+                    + randn * weighted_randomness); 
             end
         end
         if move_value + randn * selection_randomness > best_move_value
