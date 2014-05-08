@@ -11,7 +11,7 @@ value = [0.01, 0.15, 0.75, 1.5];
 offensive_bias = 1.01;
 defensive_bias = 1;
 selection_randomness = 0.0000001; % makes AI choose randomly between moves with equal value
-weighted_randomness = max(0, 0.16 - 0.02 * difficulty);
+weighted_randomness = max(0, 0.4 - 0.05 * difficulty);
 
 best_move_value = -Inf;
 best_move = 1; % This should always be overwritten the first chance
