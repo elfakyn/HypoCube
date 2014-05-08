@@ -36,13 +36,15 @@ SQUARES = csvread(sprintf('pregenerated_squares/squares_%d_%d.csv', size(BOARD,1
 gui = struct;
 
 gui.bsize = size(BOARD);
-gui.boxdim = [40, 40];
+gui.boxdim = [40, 40]; % please keep this square or the GUI will have weird bugs.
 gui.boxgap = [0, 0];
 gui.topmargin = 2*gui.boxdim(2);
 gui.margins = 0.5 * gui.boxdim;
-gui.ball{1} = imread('assets/blue_ball.png');
-gui.ball{2} = imread('assets/orange_ball.png');
-gui.background = imread('assets/board_slot.png');
+gui.images = {imread('assets/board_slot.png'), imread('assets/blue_ball.png'), imread('assets/orange_ball.png')};
+gui.color_index_table = [94, 162, 255; 255, 196, 94];
+
+global OVERLAY;
+OVERLAY = zeros(gui.bsize(1) * gui.boxdim(1), gui.bsize(2) * gui.boxdim(2));
 
 gui.width = gui.bsize(1)*gui.boxdim(1) + 2*gui.margins(1) - gui.boxgap(1);
 gui.height = gui.bsize(2)*gui.boxdim(2) + 2*gui.margins(2) + gui.topmargin;
@@ -94,7 +96,8 @@ for i = 1:gui.bsize(1)
         gui.board(i, j) = uicontrol(gui.main ...
             , 'Style', 'pushbutton' ...
             , 'Position', [gui.margins(1)+(i-1)*gui.boxdim(1), gui.margins(2)+(j-1)*gui.boxdim(2), gui.boxdim(1)-gui.boxgap(1), gui.boxdim(2)-gui.boxgap(2)] ...
-            , 'CData', gui.background ...
+            , 'CData', gui.images{1} ...
+            , 'FontSize', 8 ...
             );
     end
 end
